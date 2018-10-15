@@ -39,3 +39,8 @@ I/flutter ( 5464): --------------
 I/flutter ( 5464): Closing the connection ... successful!
 I/flutter ( 5464): ------
 ```
+
+### new
+
+pub run build_runner build
+https://cloud.tencent.com/developer/article/1337598

@@ -4,16 +4,18 @@ dependencies:
   flutter:
     sdk: flutter
 
+  build_runner_core: ^1.0.0
   sqflite:
-  jaguar_orm: ^2.2.0
-  jaguar_query_sqflite: ^2.2.0
+  jaguar_orm: ^2.2.5
+  jaguar_query_sqflite: ^2.2.4
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+#  flutter_test:
+#    sdk: flutter
 
-  jaguar_orm_gen: ^2.2.0
+  jaguar_orm_gen: ^2.2.16
   build_runner: ^0.10.0
+
 
 flutter:
   uses-material-design: true
