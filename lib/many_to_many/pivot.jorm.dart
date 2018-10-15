@@ -7,16 +7,15 @@ part of 'pivot.dart';
 // **************************************************************************
 
 abstract class _PivotBean implements Bean<Pivot> {
-  final postId = new IntField('post_id');
-  final itemId = new IntField('item_id');
+  final postId = IntField('post_id');
+  final itemId = IntField('item_id');
   Map<String, Field> _fields;
   Map<String, Field> get fields => _fields ??= {
         postId.name: postId,
         itemId.name: itemId,
       };
   Pivot fromMap(Map map) {
-    Pivot model = new Pivot();
-
+    Pivot model = Pivot();
     model.postId = adapter.parseValue(map['post_id']);
     model.itemId = adapter.parseValue(map['item_id']);
 
@@ -38,8 +37,8 @@ abstract class _PivotBean implements Bean<Pivot> {
     return ret;
   }
 
-  Future<void> createTable() async {
-    final st = Sql.create(tableName);
+  Future<void> createTable({bool ifNotExists: false}) async {
+    final st = Sql.create(tableName, ifNotExists: ifNotExists);
     st.addInt(postId.name,
         foreignTable: postBean.tableName, foreignCol: 'id', isNullable: false);
     st.addInt(itemId.name,
@@ -56,7 +55,24 @@ abstract class _PivotBean implements Bean<Pivot> {
     final List<List<SetColumn>> data =
         models.map((model) => toSetColumns(model)).toList();
     final InsertMany insert = inserters.addAll(data);
-    return adapter.insertMany(insert);
+    await adapter.insertMany(insert);
+    return;
+  }
+
+  Future<dynamic> upsert(Pivot model) async {
+    final Upsert upsert = upserter.setMany(toSetColumns(model));
+    return adapter.upsert(upsert);
+  }
+
+  Future<void> upsertMany(List<Pivot> models) async {
+    final List<List<SetColumn>> data = [];
+    for (var i = 0; i < models.length; ++i) {
+      var model = models[i];
+      data.add(toSetColumns(model).toList());
+    }
+    final UpsertMany upsert = upserters.addAll(data);
+    await adapter.upsertMany(upsert);
+    return;
   }
 
   Future<void> updateMany(List<Pivot> models) async {
@@ -68,7 +84,8 @@ abstract class _PivotBean implements Bean<Pivot> {
       where.add(null);
     }
     final UpdateMany update = updaters.addAll(data, where);
-    return adapter.updateMany(update);
+    await adapter.updateMany(update);
+    return;
   }
 
   Future<List<Pivot>> findByPost(int postId,
@@ -98,7 +115,7 @@ abstract class _PivotBean implements Bean<Pivot> {
   Future<int> detachPost(Post model) async {
     final dels = await findByPost(model.id);
     await removeByPost(model.id);
-    final exp = new Or();
+    final exp = Or();
     for (final t in dels) {
       exp.or(itemBean.id.eq(t.itemId));
     }
@@ -107,7 +124,8 @@ abstract class _PivotBean implements Bean<Pivot> {
 
   Future<List<Item>> fetchByPost(Post model) async {
     final pivots = await findByPost(model.id);
-    final exp = new Or();
+    if (pivots.isEmpty) return [];
+    final exp = Or();
     for (final t in pivots) {
       exp.or(itemBean.id.eq(t.itemId));
     }
@@ -141,7 +159,7 @@ abstract class _PivotBean implements Bean<Pivot> {
   Future<int> detachItem(Item model) async {
     final dels = await findByItem(model.id);
     await removeByItem(model.id);
-    final exp = new Or();
+    final exp = Or();
     for (final t in dels) {
       exp.or(postBean.id.eq(t.postId));
     }
@@ -150,7 +168,8 @@ abstract class _PivotBean implements Bean<Pivot> {
 
   Future<List<Post>> fetchByItem(Item model) async {
     final pivots = await findByItem(model.id);
-    final exp = new Or();
+    if (pivots.isEmpty) return [];
+    final exp = Or();
     for (final t in pivots) {
       exp.or(postBean.id.eq(t.postId));
     }
@@ -158,7 +177,7 @@ abstract class _PivotBean implements Bean<Pivot> {
   }
 
   Future<dynamic> attach(Post one, Item two) async {
-    final ret = new Pivot();
+    final ret = Pivot();
     ret.postId = one.id;
     ret.itemId = two.id;
     return insert(ret);

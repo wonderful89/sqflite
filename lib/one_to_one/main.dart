@@ -53,8 +53,14 @@ void main() async {
     int id1 = await bean.insert(post, cascade: true);
     sb.writeln(
         'Inserted successfully row with id: $id1 and one to one relation!');
-    int id2 = await bean
-        .insert(new Post.make(2, 'Sure!', 5.0, true, DateTime.now(), null));
+    int id2 = await bean.insert(new Post.make(
+      2,
+      'Sure!',
+      5.0,
+      true,
+      DateTime.now(),
+      null,
+    ));
     sb.writeln('Inserted successfully row with id: $id2!');
     /*
   int id3 =

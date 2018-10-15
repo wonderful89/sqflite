@@ -7,16 +7,15 @@ part of 'item.dart';
 // **************************************************************************
 
 abstract class _ItemBean implements Bean<Item> {
-  final id = new IntField('id');
-  final msg = new StrField('msg');
+  final id = IntField('id');
+  final msg = StrField('msg');
   Map<String, Field> _fields;
   Map<String, Field> get fields => _fields ??= {
         id.name: id,
         msg.name: msg,
       };
   Item fromMap(Map map) {
-    Item model = new Item();
-
+    Item model = Item();
     model.id = adapter.parseValue(map['id']);
     model.msg = adapter.parseValue(map['msg']);
 
@@ -38,8 +37,8 @@ abstract class _ItemBean implements Bean<Item> {
     return ret;
   }
 
-  Future<void> createTable() async {
-    final st = Sql.create(tableName);
+  Future<void> createTable({bool ifNotExists: false}) async {
+    final st = Sql.create(tableName, ifNotExists: ifNotExists);
     st.addInt(id.name, primary: true, isNullable: false);
     st.addStr(msg.name, isNullable: true);
     return adapter.createTable(st);
@@ -67,12 +66,50 @@ abstract class _ItemBean implements Bean<Item> {
       for (var model in models) {
         futures.add(insert(model, cascade: cascade));
       }
-      return Future.wait(futures);
+      await Future.wait(futures);
+      return;
     } else {
       final List<List<SetColumn>> data =
           models.map((model) => toSetColumns(model)).toList();
       final InsertMany insert = inserters.addAll(data);
-      return adapter.insertMany(insert);
+      await adapter.insertMany(insert);
+      return;
+    }
+  }
+
+  Future<dynamic> upsert(Item model, {bool cascade: false}) async {
+    final Upsert upsert = upserter.setMany(toSetColumns(model));
+    var retId = await adapter.upsert(upsert);
+    if (cascade) {
+      Item newModel;
+      if (model.posts != null) {
+        newModel ??= await find(model.id);
+        for (final child in model.posts) {
+          await postBean.upsert(child);
+          await pivotBean.attach(child, model);
+        }
+      }
+    }
+    return retId;
+  }
+
+  Future<void> upsertMany(List<Item> models, {bool cascade: false}) async {
+    if (cascade) {
+      final List<Future> futures = [];
+      for (var model in models) {
+        futures.add(upsert(model, cascade: cascade));
+      }
+      await Future.wait(futures);
+      return;
+    } else {
+      final List<List<SetColumn>> data = [];
+      for (var i = 0; i < models.length; ++i) {
+        var model = models[i];
+        data.add(toSetColumns(model).toList());
+      }
+      final UpsertMany upsert = upserters.addAll(data);
+      await adapter.upsertMany(upsert);
+      return;
     }
   }
 
@@ -86,7 +123,7 @@ abstract class _ItemBean implements Bean<Item> {
       Item newModel;
       if (model.posts != null) {
         for (final child in model.posts) {
-          await await postBean.update(child);
+          await postBean.update(child);
         }
       }
     }
@@ -99,7 +136,8 @@ abstract class _ItemBean implements Bean<Item> {
       for (var model in models) {
         futures.add(update(model, cascade: cascade));
       }
-      return Future.wait(futures);
+      await Future.wait(futures);
+      return;
     } else {
       final List<List<SetColumn>> data = [];
       final List<Expression> where = [];
@@ -109,14 +147,15 @@ abstract class _ItemBean implements Bean<Item> {
         where.add(this.id.eq(model.id));
       }
       final UpdateMany update = updaters.addAll(data, where);
-      return adapter.updateMany(update);
+      await adapter.updateMany(update);
+      return;
     }
   }
 
   Future<Item> find(int id, {bool preload: false, bool cascade: false}) async {
     final Find find = finder.where(this.id.eq(id));
     final Item model = await findOne(find);
-    if (preload) {
+    if (preload && model != null) {
       await this.preload(model, cascade: cascade);
     }
     return model;
@@ -125,7 +164,9 @@ abstract class _ItemBean implements Bean<Item> {
   Future<int> remove(int id, [bool cascade = false]) async {
     if (cascade) {
       final Item newModel = await find(id);
-      await pivotBean.detachItem(newModel);
+      if (newModel != null) {
+        await pivotBean.detachItem(newModel);
+      }
     }
     final Remove remove = remover.where(this.id.eq(id));
     return adapter.remove(remove);

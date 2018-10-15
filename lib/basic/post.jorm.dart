@@ -7,11 +7,11 @@ part of 'post.dart';
 // **************************************************************************
 
 abstract class _PostBean implements Bean<Post> {
-  final id = new IntField('id');
-  final msg = new StrField('msg');
-  final read = new BoolField('read');
-  final stars = new DoubleField('stars');
-  final at = new DateTimeField('at');
+  final id = IntField('id');
+  final msg = StrField('msg');
+  final read = BoolField('read');
+  final stars = DoubleField('stars');
+  final at = DateTimeField('at');
   Map<String, Field> _fields;
   Map<String, Field> get fields => _fields ??= {
         id.name: id,
@@ -21,8 +21,7 @@ abstract class _PostBean implements Bean<Post> {
         at.name: at,
       };
   Post fromMap(Map map) {
-    Post model = new Post();
-
+    Post model = Post();
     model.id = adapter.parseValue(map['id']);
     model.msg = adapter.parseValue(map['msg']);
     model.read = adapter.parseValue(map['read']);
@@ -53,8 +52,8 @@ abstract class _PostBean implements Bean<Post> {
     return ret;
   }
 
-  Future<void> createTable() async {
-    final st = Sql.create(tableName);
+  Future<void> createTable({bool ifNotExists: false}) async {
+    final st = Sql.create(tableName, ifNotExists: ifNotExists);
     st.addInt(id.name, primary: true, isNullable: false);
     st.addStr(msg.name, isNullable: true);
     st.addBool(read.name, isNullable: true);
@@ -72,7 +71,24 @@ abstract class _PostBean implements Bean<Post> {
     final List<List<SetColumn>> data =
         models.map((model) => toSetColumns(model)).toList();
     final InsertMany insert = inserters.addAll(data);
-    return adapter.insertMany(insert);
+    await adapter.insertMany(insert);
+    return;
+  }
+
+  Future<dynamic> upsert(Post model) async {
+    final Upsert upsert = upserter.setMany(toSetColumns(model));
+    return adapter.upsert(upsert);
+  }
+
+  Future<void> upsertMany(List<Post> models) async {
+    final List<List<SetColumn>> data = [];
+    for (var i = 0; i < models.length; ++i) {
+      var model = models[i];
+      data.add(toSetColumns(model).toList());
+    }
+    final UpsertMany upsert = upserters.addAll(data);
+    await adapter.upsertMany(upsert);
+    return;
   }
 
   Future<int> update(Post model, {Set<String> only}) async {
@@ -91,7 +107,8 @@ abstract class _PostBean implements Bean<Post> {
       where.add(this.id.eq(model.id));
     }
     final UpdateMany update = updaters.addAll(data, where);
-    return adapter.updateMany(update);
+    await adapter.updateMany(update);
+    return;
   }
 
   Future<Post> find(int id, {bool preload: false, bool cascade: false}) async {

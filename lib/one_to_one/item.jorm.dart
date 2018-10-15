@@ -7,9 +7,9 @@ part of 'item.dart';
 // **************************************************************************
 
 abstract class _ItemBean implements Bean<Item> {
-  final id = new IntField('id');
-  final msg = new StrField('msg');
-  final postId = new IntField('post_id');
+  final id = IntField('id');
+  final msg = StrField('msg');
+  final postId = IntField('post_id');
   Map<String, Field> _fields;
   Map<String, Field> get fields => _fields ??= {
         id.name: id,
@@ -17,8 +17,7 @@ abstract class _ItemBean implements Bean<Item> {
         postId.name: postId,
       };
   Item fromMap(Map map) {
-    Item model = new Item();
-
+    Item model = Item();
     model.id = adapter.parseValue(map['id']);
     model.msg = adapter.parseValue(map['msg']);
     model.postId = adapter.parseValue(map['post_id']);
@@ -43,8 +42,8 @@ abstract class _ItemBean implements Bean<Item> {
     return ret;
   }
 
-  Future<void> createTable() async {
-    final st = Sql.create(tableName);
+  Future<void> createTable({bool ifNotExists: false}) async {
+    final st = Sql.create(tableName, ifNotExists: ifNotExists);
     st.addInt(id.name, primary: true, isNullable: false);
     st.addStr(msg.name, isNullable: true);
     st.addInt(postId.name,
@@ -61,7 +60,24 @@ abstract class _ItemBean implements Bean<Item> {
     final List<List<SetColumn>> data =
         models.map((model) => toSetColumns(model)).toList();
     final InsertMany insert = inserters.addAll(data);
-    return adapter.insertMany(insert);
+    await adapter.insertMany(insert);
+    return;
+  }
+
+  Future<dynamic> upsert(Item model) async {
+    final Upsert upsert = upserter.setMany(toSetColumns(model));
+    return adapter.upsert(upsert);
+  }
+
+  Future<void> upsertMany(List<Item> models) async {
+    final List<List<SetColumn>> data = [];
+    for (var i = 0; i < models.length; ++i) {
+      var model = models[i];
+      data.add(toSetColumns(model).toList());
+    }
+    final UpsertMany upsert = upserters.addAll(data);
+    await adapter.upsertMany(upsert);
+    return;
   }
 
   Future<int> update(Item model, {Set<String> only}) async {
@@ -80,7 +96,8 @@ abstract class _ItemBean implements Bean<Item> {
       where.add(this.id.eq(model.id));
     }
     final UpdateMany update = updaters.addAll(data, where);
-    return adapter.updateMany(update);
+    await adapter.updateMany(update);
+    return;
   }
 
   Future<Item> find(int id, {bool preload: false, bool cascade: false}) async {
