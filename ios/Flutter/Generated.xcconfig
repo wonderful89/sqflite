@@ -1,7 +1,7 @@
 // This is a generated file; do not edit or check into version control.
 FLUTTER_ROOT=/Users/yangyanhui/Work/GitHub/awesome-flutter/flutter
 FLUTTER_APPLICATION_PATH=/Users/yangyanhui/Work/GitHub/awesome-flutter/jaguar_query_sqflite
-FLUTTER_TARGET=/Users/yangyanhui/Work/GitHub/awesome-flutter/jaguar_query_sqflite/lib/auto_increment/main.dart
+FLUTTER_TARGET=/Users/yangyanhui/Work/GitHub/awesome-flutter/jaguar_query_sqflite/lib/main.dart
 FLUTTER_BUILD_MODE=debug
 FLUTTER_BUILD_DIR=build
 SYMROOT=${SOURCE_ROOT}/../build/ios

@@ -9,6 +9,8 @@ part of 'post.dart';
 abstract class _PostBean implements Bean<Post> {
   final id = IntField('id');
   final msg = StrField('msg');
+  final msg2 = StrField('msg2');
+  final msg3 = StrField('msg3');
   final read = BoolField('read');
   final stars = DoubleField('stars');
   final at = DateTimeField('at');
@@ -16,6 +18,8 @@ abstract class _PostBean implements Bean<Post> {
   Map<String, Field> get fields => _fields ??= {
         id.name: id,
         msg.name: msg,
+        msg2.name: msg2,
+        msg3.name: msg3,
         read.name: read,
         stars.name: stars,
         at.name: at,
@@ -24,6 +28,8 @@ abstract class _PostBean implements Bean<Post> {
     Post model = Post();
     model.id = adapter.parseValue(map['id']);
     model.msg = adapter.parseValue(map['msg']);
+    model.msg2 = adapter.parseValue(map['msg2']);
+    model.msg3 = adapter.parseValue(map['msg3']);
     model.read = adapter.parseValue(map['read']);
     model.stars = adapter.parseValue(map['stars']);
     model.at = adapter.parseValue(map['at']);
@@ -38,12 +44,16 @@ abstract class _PostBean implements Bean<Post> {
     if (only == null) {
       ret.add(id.set(model.id));
       ret.add(msg.set(model.msg));
+      ret.add(msg2.set(model.msg2));
+      ret.add(msg3.set(model.msg3));
       ret.add(read.set(model.read));
       ret.add(stars.set(model.stars));
       ret.add(at.set(model.at));
     } else {
       if (only.contains(id.name)) ret.add(id.set(model.id));
       if (only.contains(msg.name)) ret.add(msg.set(model.msg));
+      if (only.contains(msg2.name)) ret.add(msg2.set(model.msg2));
+      if (only.contains(msg3.name)) ret.add(msg3.set(model.msg3));
       if (only.contains(read.name)) ret.add(read.set(model.read));
       if (only.contains(stars.name)) ret.add(stars.set(model.stars));
       if (only.contains(at.name)) ret.add(at.set(model.at));
@@ -56,6 +66,8 @@ abstract class _PostBean implements Bean<Post> {
     final st = Sql.create(tableName, ifNotExists: ifNotExists);
     st.addInt(id.name, primary: true, isNullable: false);
     st.addStr(msg.name, isNullable: true);
+    st.addStr(msg2.name, isNullable: true);
+    st.addStr(msg3.name, isNullable: true);
     st.addBool(read.name, isNullable: true);
     st.addDouble(stars.name, isNullable: true);
     st.addDateTime(at.name, isNullable: true);

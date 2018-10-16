@@ -14,7 +14,7 @@ import 'post.dart';
 SqfliteAdapter _adapter;
 
 void main() async {
-  await Sqflite.devSetDebugModeOn(true);
+  await Sqflite.setDebugModeOn(true);
   var sb = StringBuffer();
   sb.writeln("Jaguar ORM showcase:");
 

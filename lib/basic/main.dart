@@ -41,11 +41,11 @@ void main() async {
 
   // Insert some posts
   sb.writeln('Inserting sample rows ...');
-  int id1 = await bean
-      .insert(new Post.make(1, 'Coffee?', 4.5, false, DateTime.now()));
+  int id1 = await bean.insert(new Post.make(
+      1, 'Coffee?', 4.5, false, DateTime.now(), 'msg2-1', 'msg3-1'));
   sb.writeln('Inserted successfully row with id: $id1!');
-  int id2 =
-      await bean.insert(new Post.make(2, 'Sure!', 5.0, true, DateTime.now()));
+  int id2 = await bean.insert(
+      new Post.make(2, 'Sure!', 5.0, true, DateTime.now(), 'msg2-2', 'msg3-2'));
   sb.writeln('Inserted successfully row with id: $id2!');
   /*
   int id3 =
@@ -53,6 +53,8 @@ void main() async {
   sb.writeln('Inserted successfully row with id: $id3!');
   */
   sb.writeln('--------------');
+  List unreadItems = await bean.getAllUnreadItems();
+  sb.writeln('unreadItems = $unreadItems');
 
   // Find one post
   sb.writeln('Reading row with id $id1 ...');
@@ -99,6 +101,6 @@ void main() async {
 
   print(sb.toString());
 
-  runApp(SingleChildScrollView(
-      child: Text(sb.toString(), textDirection: TextDirection.ltr)));
+//  runApp(SingleChildScrollView(
+//      child: Text(sb.toString(), textDirection: TextDirection.ltr)));
 }
