@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 //import 'package:flutter_test/flutter_test.dart';
-//// import 'package:sqflite_example/main.dart' as sqflite_example;
+//// import 'package:sqflite_example/basic_main.dart' as sqflite_example;
 //
 //void main() {
 //  testWidgets('Hello world smoke test', (WidgetTester tester) async {

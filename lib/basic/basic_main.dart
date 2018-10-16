@@ -12,7 +12,7 @@ import 'post.dart';
 /// The adapter
 SqfliteAdapter _adapter;
 
-void main() async {
+void entry() async {
   var sb = StringBuffer();
   sb.writeln("Jaguar ORM showcase:");
 

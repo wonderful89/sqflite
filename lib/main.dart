@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import "basic/main.dart" as root;
+import "basic/basic_main.dart" as root;
 
 void main() {
-  root.main();
+  root.entry();
   runApp(new Center(
     child: new Text(
       'aaa',
