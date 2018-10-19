@@ -1,9 +1,30 @@
-name: sqflite_example_build
+name: sqflite_example
+
 dependencies:
-dev_dependencies:
-  jaguar_orm_gen: ^2.2.16
-  build_runner: ^0.10.3
-  json_object_convert:
-    path: librarys/json_object_convert
+  flutter:
+    sdk: flutter
+
+  build_runner_core: ^1.0.0
+  sqflite: ^0.12.2+1
+  jaguar_orm: ^2.2.5
+  jaguar_query_sqflite: ^2.2.4
   json_object_convert_help:
-     # path: librarys/json_object_convert_help
+    path: librarys/json_object_convert_help
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+#  jaguar_orm_gen: ^2.2.16
+#  build_runner: ^0.10.0
+
+flutter:
+  uses-material-design: true
+
+
+############################################################################################################
+
+#name: sqflite_example_build
+#dependencies:
+#dev_dependencies:
+#  jaguar_orm_gen: ^2.2.16
+#  build_runner: ^0.13.0

@@ -22,7 +22,7 @@ class TestAAA {
     this.enumTypeOne = EnumTypeOne.red,
   });
 
-  µ@override
+  @override
   String toString() {
     return '[name = $name, total = $total, enumTypeOne = $enumTypeOne, msgMap = $msgMap]';
   }
