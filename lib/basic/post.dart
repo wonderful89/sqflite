@@ -27,6 +27,9 @@ class Post {
   String msg3;
 
   @Column(isNullable: true)
+  String msg4;
+
+  @Column(isNullable: true)
   bool read;
 
   @Column(isNullable: true)

@@ -3,3 +3,7 @@ dependencies:
 dev_dependencies:
   jaguar_orm_gen: ^2.2.16
   build_runner: ^0.10.3
+  json_object_convert:
+    path: librarys/json_object_convert
+  json_object_convert_help:
+      path: librarys/json_object_convert_help

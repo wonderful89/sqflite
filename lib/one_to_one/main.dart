@@ -21,6 +21,7 @@ void main() async {
   sb.writeln('--------------');
   sb.write('Connecting ...');
   var dbPath = await getDatabasesPath();
+  sb.write('dbPath = $dbPath');
   _adapter = SqfliteAdapter(path.join(dbPath, "test.db"));
 
   try {

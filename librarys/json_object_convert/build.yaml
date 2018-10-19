@@ -1,0 +1,8 @@
+# Read about `build.yaml` at https://pub.dartlang.org/packages/build_config
+builders:
+  json_object_convert:
+    import: "package:json_object_convert/builder.dart"
+    builder_factories: ["entryPoint"]
+    build_extensions: {".dart": [".json.dart"]}
+    auto_apply: root_package
+    build_to: source

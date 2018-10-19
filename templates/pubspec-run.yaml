@@ -8,6 +8,8 @@ dependencies:
   sqflite: ^0.12.2+1
   jaguar_orm: ^2.2.5
   jaguar_query_sqflite: ^2.2.4
+  json_object_convert_help:
+    path: librarys/json_object_convert_help
 
 dev_dependencies:
   flutter_test:
