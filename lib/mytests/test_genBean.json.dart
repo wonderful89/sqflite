@@ -3,10 +3,10 @@
 part of 'test_genBean.dart';
 
 // **************************************************************************
-// Generator: BeanGenerator2
+// ConvertGenerator
 // **************************************************************************
 
-EnumTypeOne _buildEnumTypeOne(int index) {
+EnumTypeOne buildEnumTypeOne(int index) {
   try {
     return EnumTypeOne.values[index];
   } catch (e) {
@@ -21,7 +21,7 @@ class TestAAAConverter {
         count: obj['count'],
         total: obj['total'],
         name: obj['name'],
-        enumTypeOne: _buildEnumTypeOne(obj['enumTypeOne'] ?? 0),
+        enumTypeOne: buildEnumTypeOne(obj['enumTypeOne'] ?? 0),
       );
     } else {
       print('TestAAA toObj fail: obj = $obj');

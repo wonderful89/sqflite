@@ -1,17 +1,14 @@
 import 'package:json_object_convert_help/json_object_convert_help.dart';
+import 'package:sqflite_example_build/mytests/enum_one.dart';
 part 'test_genBean.json.dart';
 
-enum EnumTypeOne {
-  red,
-  blue,
-  green,
-}
 
 @GenConvertFile()
 class TestAAA {
   final int count;
   final int total;
   final String name;
+//  String name4;
   final Map msgMap;
   EnumTypeOne enumTypeOne;
   TestAAA({
