@@ -40,7 +40,7 @@ class Post {
   static String get tableName => 'posts';
 }
 
-@GenBean()
+//@GenBean()
 class PostBean extends Bean<Post> with _PostBean {
   PostBean(Adapter adapter)
       : itemBean = ItemBean(adapter),

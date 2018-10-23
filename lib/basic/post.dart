@@ -42,6 +42,8 @@ class Post {
       'Post(id: $id, message: $msg, stars: $stars, read: $read, at: $at), msg2=$msg2, msg3=$msg3';
 }
 
+@Column(isNullable: true)
+//@GenBean(relations: {'string1': HasOne(Bean)})
 @GenBean()
 class PostBean extends Bean<Post> with _PostBean {
   PostBean(Adapter adapter) : super(adapter);

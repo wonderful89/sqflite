@@ -33,7 +33,7 @@ class Post {
       'Post(id: $id, message: $msg, stars: $stars, read: $read, at: $at)';
 }
 
-@GenBean()
+//@GenBean()
 class PostBean extends Bean<Post> with _PostBean {
   PostBean(Adapter adapter) : super(adapter);
 

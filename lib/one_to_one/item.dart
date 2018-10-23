@@ -25,7 +25,7 @@ class Item {
   String toString() => 'Item(id: $id, message: $msg)';
 }
 
-@GenBean()
+//@GenBean()
 class ItemBean extends Bean<Item> with _ItemBean {
   PostBean _postBean;
 

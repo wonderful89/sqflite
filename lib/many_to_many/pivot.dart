@@ -19,7 +19,7 @@ class Pivot {
   int itemId;
 }
 
-@GenBean()
+//@GenBean()
 class PivotBean extends Bean<Pivot> with _PivotBean {
   PivotBean(Adapter adapter) : super(adapter);
 

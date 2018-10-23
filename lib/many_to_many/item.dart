@@ -24,7 +24,7 @@ class Item {
   List<Post> posts;
 }
 
-@GenBean()
+//@GenBean()
 class ItemBean extends Bean<Item> with _ItemBean {
   ItemBean(Adapter adapter) : super(adapter);
 
