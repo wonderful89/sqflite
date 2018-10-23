@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
 #echo "############################## begin build"
 #echo "############################## end build"
